@@ -215,89 +215,92 @@ const ChatScreen = (props: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <HeaderComponent/>
-      <GiftedChat
-        messages={messages}
-        onSend={text => onSendPress(text)}
-        user={{
-          _id: 'user001',
-          name: "Murat",
-          avatar: 'https://randomuser.me/api/portraits/men/9.jpg'
-       }}
-        // renderAvatar={() => null}
-        renderTime={() => null}
-        // renderDay={(day)=>{
-        //   console.log("--------renderDay-----", day)
-        //   return <Text>{day.currentMessage?.createdAt?.toISOString()}</Text>
-        // }}
-        // onInputTextChanged={text => {
-        //   if (text.length > 0) {
-        //     pubNub.signal(
-        //       {
-        //         channel: channelId,
-        //         message: `${userData.first_name}`,
-        //       },
-        //       ew => {
-        //         console.log('ee', ew);
-        //       },
-        //     );
-        //   }
-        //   if (text.length === 0) {
-        //     pubNub.signal(
-        //       {
-        //         channel: channelId,
-        //         message: 'TYPING STOP',
-        //       },
-        //       ew => {
-        //         console.log('ee', ew);
-        //       },
-        //     );
-        //   }
-        // }}
-        // renderMessage={msg => renderMessage(msg)}
-        listViewProps={{
-          contentContainerStyle: styles.listView,
+      <View style={{flex: 1, marginBottom: 60}}>
+        <GiftedChat
+          messages={messages}
+          onSend={text => onSendPress(text)}
+          user={{
+            _id: 'user001',
+            name: "Murat",
+            avatar: 'https://randomuser.me/api/portraits/men/9.jpg'
         }}
-        // renderFooter={() => {
-        //   return (
-        //     <View style={styles.typingContainer}>
-        //       {isTyping && (
-        //         <Text style={styles.typingText}>
-        //           {chattingWith.toUpperCase()} TYPING...
-        //         </Text>
-        //       )}
-        //     </View>
-        //   );
-        // }}
-        // renderInputToolbar={renderCustomInputToolbar}
-        // isKeyboardInternallyHandled={false}
-        // textInputStyle={styles.textInput}
-        // alwaysShowSend
-        // renderSend={sendProps => {
-        //   const {text, messageIdGenerator, user, onSend} = sendProps;
-        //   return (
-        //     <TouchableOpacity
-        //       onPress={() => {
-        //         if (text?.trim().length === 0) {
-        //           Toast.show('Please enter some message');
-        //         }
-        //         if (text && onSend) {
-        //           onSend(
-        //             {
-        //               text: text.trim(),
-        //               user: user,
-        //               _id: messageIdGenerator(),
-        //             },
-        //             true,
-        //           );
-        //         }
-        //       }}
-        //       style={styles.sendButton}>
-        //       <SEND width={21} height={21} />
-        //     </TouchableOpacity>
-        //   );
-        // }}
-        // keyboardShouldPersistTaps="never"
-      />
+          // renderAvatar={() => null}
+          renderTime={() => null}
+          wrapInSafeArea={false}
+          // renderDay={(day)=>{
+          //   console.log("--------renderDay-----", day)
+          //   return <Text>{day.currentMessage?.createdAt?.toISOString()}</Text>
+          // }}
+          // onInputTextChanged={text => {
+          //   if (text.length > 0) {
+          //     pubNub.signal(
+          //       {
+          //         channel: channelId,
+          //         message: `${userData.first_name}`,
+          //       },
+          //       ew => {
+          //         console.log('ee', ew);
+          //       },
+          //     );
+          //   }
+          //   if (text.length === 0) {
+          //     pubNub.signal(
+          //       {
+          //         channel: channelId,
+          //         message: 'TYPING STOP',
+          //       },
+          //       ew => {
+          //         console.log('ee', ew);
+          //       },
+          //     );
+          //   }
+          // }}
+          // renderMessage={msg => renderMessage(msg)}
+          listViewProps={{
+            contentContainerStyle: styles.listView,
+          }}
+          // renderFooter={() => {
+          //   return (
+          //     <View style={styles.typingContainer}>
+          //       {isTyping && (
+          //         <Text style={styles.typingText}>
+          //           {chattingWith.toUpperCase()} TYPING...
+          //         </Text>
+          //       )}
+          //     </View>
+          //   );
+          // }}
+          // renderInputToolbar={renderCustomInputToolbar}
+          // isKeyboardInternallyHandled={false}
+          // textInputStyle={styles.textInput}
+          // alwaysShowSend
+          // renderSend={sendProps => {
+          //   const {text, messageIdGenerator, user, onSend} = sendProps;
+          //   return (
+          //     <TouchableOpacity
+          //       onPress={() => {
+          //         if (text?.trim().length === 0) {
+          //           Toast.show('Please enter some message');
+          //         }
+          //         if (text && onSend) {
+          //           onSend(
+          //             {
+          //               text: text.trim(),
+          //               user: user,
+          //               _id: messageIdGenerator(),
+          //             },
+          //             true,
+          //           );
+          //         }
+          //       }}
+          //       style={styles.sendButton}>
+          //       <SEND width={21} height={21} />
+          //     </TouchableOpacity>
+          //   );
+          // }}
+          // keyboardShouldPersistTaps="never"
+        />
+      </View>
     </SafeAreaView>
   );
 };

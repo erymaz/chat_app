@@ -12,6 +12,8 @@ const ic_notification_n = require('../assets/icons/bottom-tab/Notifications.png'
 const ic_message_f = require('../assets/icons/bottom-tab/Messages.png');
 const ic_message_n = require('../assets/icons/bottom-tab/Messages.png');
 
+const ic_chevron_left = require('../assets/icons/Chevron-Left.png');
+
 /** images */
 
 export const images = {
@@ -26,6 +28,8 @@ export const images = {
   ic_notification_n,
   ic_message_f,
   ic_message_n,
+
+  ic_chevron_left
 
   // images
 };

@@ -10,16 +10,16 @@ import {isIphoneX} from '@utils';
 import {styles} from './style';
 import { HomeScreen } from '@screens/app';
 import { SpaceScreen } from '@screens/app';
-import { MessageScreen } from '@screens/app';
 import { AddScreen } from '@screens/app';
 import { NotificationScreen } from '@screens/app';
+import MessageScreenStack from './MessageStack';
 
 export type BottomTabStackParamList = {
   Home: undefined;
   Space: undefined;
   Add: undefined;
   Notification: undefined;
-  Message: undefined;
+  MessageStack: undefined;
 };
 
 type TabBarIconParams = {focused: boolean; color: string; size: number};
@@ -135,8 +135,8 @@ const BottomTab = () => {
         }}
       />
       <BottomTabStack.Screen
-        name="Message"
-        component={MessageScreen}
+        name="MessageStack"
+        component={MessageScreenStack}
         options={{
           tabBarIcon: ({focused, color}: TabBarIconParams) =>
             focused ? (

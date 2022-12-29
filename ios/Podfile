@@ -7,6 +7,9 @@ install! 'cocoapods', :deterministic_uuids => false
 target 'chat_app' do
   config = use_native_modules!
 
+  # add the Firebase pod for Google Analytics
+  pod 'GoogleUtilities', :modular_headers => true
+
   # Flags change depending on the env values.
   flags = get_default_flags()
 

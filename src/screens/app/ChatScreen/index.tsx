@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
-import {GiftedChat, InputToolbar} from 'react-native-gifted-chat';
+import {GiftedChat, IMessage, InputToolbar} from 'react-native-gifted-chat';
 import {InputToolbarProps} from 'react-native-gifted-chat/lib/InputToolbar';
 import moment from 'moment';
 import {styles} from './style';
@@ -10,74 +10,48 @@ import { images } from '@commons';
 import ActiveCircle from '@components/ActiveCircle';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-
-const MESSAGE_DETAIL = [
-  {
-    _id: 2,
-    text: 'Hi. Nice to meet you',
-    createdAt: new Date(),
-
-    user: {
-      _id: 'user001',
-      name: 'React Native',
-      avatar: 'https://randomuser.me/api/portraits/men/80.jpg',
-    },
-  },
-  {
-    _id: 3,
-    text: 'what do you need?',
-    createdAt: new Date(),
-
-    user: {
-      _id: 'user001',
-      name: 'React Native',
-      avatar: 'https://randomuser.me/api/portraits/men/80.jpg',
-    },
-  },
-  {
-    _id: 1,
-    text: 'Hello developer',
-    createdAt: new Date(new Date().getTime() - 1231232132),
-    user: {
-      _id: 'user002',
-      name: 'React Native',
-      avatar: 'https://randomuser.me/api/portraits/men/11.jpg',
-    },
-  },
-  
-]
+import useMessages from '@hooks/useMessages';
+import firestore from '@react-native-firebase/firestore';
+import { COLLECTION_CHANNELS, COLLECTION_CONNECTS } from '@config';
+import { useContext } from 'react';
+import { UserContext } from '@contexts';
 
 type Props = NativeStackScreenProps<MessageStackParamList, 'ChatScreen'>;
 
-const ChatScreen = (props: Props) => {
+const ChatScreen = (props: any) => {
   const navigation = useNavigation()
+  const {user, updateUserLastActive} = useContext(UserContext)
   const {chattingWithId, channel, subjectTeach, profilePic} = props.route.params;
   const [chattingWith, setChattingWith] = useState('');
   const [successInitChat, setSuccessInitChat] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [numOfOccupants, setNumOfOccupants] = useState(0);
-  const [messages, setMessages] = useState([])
-
-  let channelId = channel;
-  console.log('channelId: ', channelId);
+  const fetchMessages = useMessages(props.route.params.channelId)
+  const [messages, setMessages] = useState<IMessage[]>([])
 
   useEffect(() => {
-    setMessages(MESSAGE_DETAIL)
-    if (channelId) {
-      
-    }
-  }, []);
+    setMessages(fetchMessages.reverse())
+  }, [fetchMessages])
 
-  useEffect(() => {
+  console.log('channelId: ', props.route.params.channelId);
 
-  }, []);
-
-  let receiverId = 'user001';
-  
-  const onSendPress = (msg: any) => {
+  const onSendPress = (msg: IMessage[]) => {
     console.log("---------onSendPress------------------", messages.length)
-    var tmpMsgs = [...messages]
-    setMessages([...msg, ...tmpMsgs])
+    // var tmpMsgs = [...messages]
+
+    console.log(msg)
+    firestore()
+      .collection(COLLECTION_CHANNELS)
+      .doc(props.route.params.channelId)
+      .update({messages: firestore.FieldValue.arrayUnion(...msg)})
+    
+    firestore()
+      .collection(COLLECTION_CONNECTS)
+      .doc(props.route.params.connectId)
+      .update({
+        lastMessageAt: new Date().getTime(),
+        lastMessage: msg[msg.length-1].text
+      })
   };
 
   const renderMessage = (msgProp: {
@@ -220,9 +194,9 @@ const ChatScreen = (props: Props) => {
           messages={messages}
           onSend={text => onSendPress(text)}
           user={{
-            _id: 'user001',
-            name: "Murat",
-            avatar: 'https://randomuser.me/api/portraits/men/9.jpg'
+            _id: user?.userId ?? "",
+            name: user?.username ?? "",
+            avatar: user?.avatar
         }}
           // renderAvatar={() => null}
           renderTime={() => null}

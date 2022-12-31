@@ -13,7 +13,7 @@ interface Props {
   picture: string;
   name: string;
   description: string;
-  lastAt: Date;
+  lastAt: number;
   onPress?: () => void;
   active: boolean;
 }

@@ -14,6 +14,10 @@
       "@utils": ["./src/utils"],
       "@components": ["./src/components"],
       "@navigation/*": ["./src/navigation/*"],
-    }/* Specify a set of entries that re-map imports to additional lookup locations. */,
+      "@models": ["./src/models"],
+      "@contexts": ["./src/contexts"],
+      "@config": ["./src/config"],
+      "@hooks": ["./src/hooks"],
+      }/* Specify a set of entries that re-map imports to additional lookup locations. */,
   }
 }

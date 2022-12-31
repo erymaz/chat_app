@@ -8,14 +8,17 @@
  * @format
  */
 
+import { UserProvider, ChatProvider } from './src/contexts';
 import React from 'react';
 import {AppNavigation} from './src/navigation';
 
 const App = () => {
   return (
-    <>
-      <AppNavigation />
-    </>
+    <UserProvider>
+      <ChatProvider>
+        <AppNavigation />
+      </ChatProvider>
+    </UserProvider>
   );
 };
 

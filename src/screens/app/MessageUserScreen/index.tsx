@@ -1,79 +1,61 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {colors, CommonStyles} from '@commons';
+import {CommonStyles} from '@commons';
 import {styles} from './style';
 import MessageUserCard from '../../../components/MessageUserCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MessageStackParamList } from '@navigation/MessageStack';
 import { useNavigation } from '@react-navigation/native';
+import { ChatContext, UserContext } from '@contexts';
+import { ConnectModel } from '@models';
 
 type Props = NativeStackScreenProps<MessageStackParamList, 'MessageUserScreen'>;
 
-const MESSAGES = [
-  {
-    id: 1,
-    channel_id: 'user001_channel_user002',
-    sender_id: 'user002',
-    sender_profile: 'https://randomuser.me/api/portraits/men/11.jpg',
-    sender_name: 'John Kempler',
-    last_message: 'How to meet that special so...',
-    created_at: new Date(),
-    active: true,
-  },
-  {
-    id: 2,
-    channel_id: 'user001_channel_user003',
-    sender_id: 'user003',
-    sender_profile: 'https://randomuser.me/api/portraits/women/11.jpg',
-    sender_name: 'Christina',
-    last_message: "Yeah I'm interested",
-    created_at: new Date(),
-    active: true,
-  },
-  {
-    id: 3,
-    channel_id: 'user001_channel_user004',
-    sender_id: 'user004',
-    sender_profile: 'https://randomuser.me/api/portraits/men/15.jpg',
-    sender_name: 'Alphons',
-    last_message: 'I took a short Meditation 101 class...',
-    created_at: new Date(),
-    active: false,
-  },
-  {
-    id: 4,
-    channel_id: 'user001_channel_user005',
-    sender_id: 'user005',
-    sender_profile: 'https://randomuser.me/api/portraits/women/41.jpg',
-    sender_name: 'Haylie Botosh',
-    last_message: 'got it. Cool!',
-    created_at: new Date(),
-    active: true,
-  },
-]
 const MessageUserScreen: React.FC<Props> = () => {
 
   const navigation = useNavigation();
+  const {user, users} = useContext(UserContext)
+  const {connects} = useContext(ChatContext)
 
-  const renderItem = ({item, index}: {item: any, index: number}) => {
+  const renderItem = ({item, index}: {item: ConnectModel, index: number}) => {
 
     const onPressItem = () => {
       console.log(item);
-      navigation.navigate('ChatScreen', {item: item})
+      navigation.navigate('ChatScreen', {connectId: item.connectId, channelId: item.channelId})
     }
     
+    const connectUsers = item.users.filter((u) => {
+      return user?.userId != u
+    })
+
+    if(connectUsers.length < 1) {
+      return
+    }
+
+    const connectUser = users.filter((u) => {
+      return u.userId == connectUsers[0]
+    })
+
+    if(connectUser.length < 1) {
+      return
+    }
+
+
     return (
       <MessageUserCard 
-        picture={item.sender_profile}
-        name={item.sender_name}
-        description={item.last_message}
-        lastAt={item.created_at}
+        picture={connectUser[0].avatar}
+        name={connectUser[0].username}
+        description={item.lastMessage ?? ""}
+        lastAt={item.lastMessageAt}
         onPress={onPressItem}
-        active={item.active}
+        active={new Date().getTime() - connectUser[0].lastActiveAt < 60000}
       />
     )
+  }
 
+  const onCreateChannel = () => {
+    navigation.navigate('CreateChannelScreen')
   }
 
   const HeaderComponent = () => {
@@ -81,7 +63,10 @@ const MessageUserScreen: React.FC<Props> = () => {
       <>
         <View style={styles.headerContainer}>
           <View>
-            <TouchableOpacity style={styles.headerCreateButton}>
+            <TouchableOpacity 
+              style={styles.headerCreateButton}
+              onPress={onCreateChannel}
+            >
               <Text style={styles.headerCreateText}>
                 C
               </Text>
@@ -97,7 +82,7 @@ const MessageUserScreen: React.FC<Props> = () => {
           <View>
             <View style={styles.profileContainer}>
               <Image 
-                source={{uri: 'https://randomuser.me/api/portraits/men/9.jpg'}}
+                source={{uri: user?.avatar}}
                 style={styles.profile}
               />
             </View>
@@ -112,9 +97,9 @@ const MessageUserScreen: React.FC<Props> = () => {
       {HeaderComponent()}
       <View style={styles.body}>
         <FlatList 
-          data={MESSAGES}
+          data={connects}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.connectId}
         />
       </View>
     </SafeAreaView>
